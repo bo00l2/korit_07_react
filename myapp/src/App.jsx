@@ -1,15 +1,12 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Counter4 from './Counter4'
 import './App.css'
 
-import Counter from './Counter';
 
 function App() {
   
   return (
     <>
-      <Counter />
+      <Counter4 />
     </>
   )
 }
