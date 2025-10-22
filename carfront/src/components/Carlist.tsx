@@ -2,7 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCars, deleteCar } from "../api/carapi";
 import { DataGrid, GridColDef, GridCellParams, GridToolbar} from "@mui/x-data-grid";
-import { Snackbar, IconButton } from "@mui/material";
+import { Snackbar, IconButton, Tooltip } from "@mui/material";
 import { useState } from "react";
 import AddCar from "./AddCar";
 import EditCar from "./EditCar";
@@ -51,14 +51,17 @@ function Carlist() {
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
-        <IconButton aria-label="delete" size="small" 
-          onClick={() => {
-          if(window.confirm(`${params.row.brand}의 ${params.row.model} 자동차를 삭제하시겠습니까?`)) {
-          mutate(params.row._links.self.href)}}
+        <Tooltip title="delete car">
+          <IconButton aria-label="delete" size="small" 
+            onClick={() => {
+            if(window.confirm(`${params.row.brand}의 ${params.row.model} 자동차를 삭제하시겠습니까?`)) {
+            mutate(params.row._links.self.href)}}
           }
           >  
-          <DeleteForeverRoundedIcon fontSize="small"/>
-        </IconButton> // params.row._links.self.href 전체 데이터의 row 값
+          {/* // params.row._links.self.href 전체 데이터의 row 값 */}
+            <DeleteForeverRoundedIcon fontSize="small"/> 
+          </IconButton> 
+        </Tooltip>
       )
     }
   ]
