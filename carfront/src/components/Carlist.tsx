@@ -1,10 +1,12 @@
 // import { CarResponse } from "../types"; table 태그에서는 data.map() 때문에 필요하지만, x-data-grid 사용 이후로는 필요 없기 때문에 주석 처리함.
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCars, deleteCar } from "../api/carapi";
-import { DataGrid, GridColDef, GridCellParams } from "@mui/x-data-grid";
-import { Snackbar } from "@mui/material";
+import { DataGrid, GridColDef, GridCellParams, GridToolbar} from "@mui/x-data-grid";
+import { Snackbar, IconButton } from "@mui/material";
 import { useState } from "react";
 import AddCar from "./AddCar";
+import EditCar from "./EditCar";
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 function Carlist() {
   const [ open, setOpen] = useState(false);
@@ -32,6 +34,16 @@ function Carlist() {
     {field: 'modelYear', headerName: 'Model Year', width: 150},
     {field: 'price', headerName: 'Price', width: 150},
     {
+      field: 'edit',
+      headerName: '',
+      width: 90,
+      sortable: false,
+      filterable: false,
+      disableColumnMenu: true,
+      renderCell: (params : GridCellParams) => 
+        <EditCar cardata={params.row} />
+    },
+    {
       field: 'delete',
       headerName: '',
       width: 90,
@@ -39,13 +51,14 @@ function Carlist() {
       filterable: false,
       disableColumnMenu: true,
       renderCell: (params: GridCellParams) => (
-        <button onClick={() => {
+        <IconButton aria-label="delete" size="small" 
+          onClick={() => {
           if(window.confirm(`${params.row.brand}의 ${params.row.model} 자동차를 삭제하시겠습니까?`)) {
           mutate(params.row._links.self.href)}}
           }
           >  
-          Delete
-        </button> // params.row._links.self.href 전체 데이터의 row 값
+          <DeleteForeverRoundedIcon fontSize="small"/>
+        </IconButton> // params.row._links.self.href 전체 데이터의 row 값
       )
     }
   ]
@@ -78,6 +91,7 @@ function Carlist() {
           rows={data}
           columns={columns}
           getRowId={row => row._links.self.href} // JSON 파일 참고
+          slots = {{toolbar: GridToolbar}}
           />
           <Snackbar 
             open={open}
